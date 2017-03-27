@@ -1,0 +1,62 @@
+
+
+<div class="section">
+  <label>Current User</label>
+  <p>
+    {{ user }}
+  </p>
+  <md-input-container class="example-full-width">
+    <input mdInput placeholder="Email" [(ngModel)]="email">
+  </md-input-container>
+  <md-input-container class="example-full-width">
+    <input mdInput placeholder="Password" [(ngModel)]="password" type="password">
+  </md-input-container>
+  <button md-raised-button (click)="updateCreds()">Update Credentials</button>
+  <button md-raised-button (click)="updateCreds()">Clear Credentials</button>
+</div>
+
+
+<div class="section">
+  <button md-raised-button (click)="importData()">Update Credentials</button>
+  <table class="responsive-table bordered">
+    <thead>
+      <th>Feature</th>
+      <th>US ID</th>
+      <th>Name</th>
+      <th>Iteration</th>
+      <th>Release</th>
+      <th>Hours</th>
+      <th>Dependencies</th>
+      <th>Successors</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let story of rallyData.data">
+        <td>
+          {{ story.PortfolioItem ? story.PortfolioItem._refObjectName : '' }}
+        </td>
+        <td>
+          {{ story.FormattedID }}
+        </td>
+        <td>
+          {{ story.Name }}
+        </td>
+        <td>
+          {{ story.Iteration }}
+        </td>
+        <td>
+          {{ story.Release ? story.Release._refObjectName : '' }}
+        </td>
+        <td>
+          {{ story.TaskEstimateTotal }}
+        </td>
+        <td>
+          {{ story.beginSprint }}
+        </td>
+        <td>
+          {{ story.endSprint }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  {{ data | json }}
+</div>

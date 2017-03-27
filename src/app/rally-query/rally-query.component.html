@@ -1,0 +1,88 @@
+<div class="section">
+  <md-tab-group>
+  <md-tab label="Release">
+    <div class="section">
+      <p>This will pull up potential US tagged with the selected release cycle or any US that is in a
+        sprint less than or equal to the sprint associated with the selected cycle.</p>
+      <md-select placeholder="IFT Release Cycle" [(ngModel)]="releaseCycle" name="cycle">
+        <md-option *ngFor="let cycle of cycles; let i = index" [value]="i">
+          {{ cycle.rallyValue }}
+        </md-option>
+      </md-select>
+    </div>
+    <button md-raised-button (click)="searchIFTCycle()">Search</button>
+  </md-tab>
+  <md-tab label="User Story ID">
+    <div class="section">
+      <p>Field takes a comma delimited list of US IDs in the format of US123,US124.</p>
+      <md-input-container class="example-full-width">
+        <input mdInput placeholder="US IDs" [(ngModel)]="USIDs">
+      </md-input-container>
+    </div>
+    <button md-raised-button (click)="searchUSIDs()">Query</button>
+  </md-tab>
+  <md-tab label="Custom">
+    <div class="section">
+      <p>This will run a custom query meeting Rally's Web API query requirements.</p>
+      <md-input-container class="example-full-width">
+        <input mdInput placeholder="Custom Query" [(ngModel)]="query">
+      </md-input-container>
+    </div>
+    <button md-raised-button (click)="runQuery()">Query</button>
+  </md-tab>
+</md-tab-group>
+</div>
+
+<md-spinner *ngIf="searching !== 0"></md-spinner>
+
+<div *ngIf="queryRan">
+  <p>result count: {{ data.length }}</p>
+  <p>
+    <label>Query Ran</label>
+    {{ queryRan }}
+  </p>
+  <div class="left-align">
+    <button md-raised-button (click)="export()">Export to CSV</button>
+  </div>
+
+  <table class="responsive-table bordered">
+    <thead>
+      <th>Feature</th>
+      <th>US ID</th>
+      <th>Name</th>
+      <th>Iteration</th>
+      <th>Release</th>
+      <th>Hours</th>
+      <th>Dependencies</th>
+      <th>Successors</th>
+    </thead>
+    <tbody>
+      <tr *ngFor="let story of data">
+        <td>
+          {{ story.PortfolioItem ? story.PortfolioItem._refObjectName : '' }}
+        </td>
+        <td>
+          {{ story.FormattedID }}
+        </td>
+        <td>
+          {{ story.Name }}
+        </td>
+        <td>
+          {{ story.Iteration ? story.Iteration._refObjectName : '' }}
+        </td>
+        <td>
+          {{ story.Release ? story.Release._refObjectName : '' }}
+        </td>
+        <td>
+          {{ story.TaskEstimateTotal }}
+        </td>
+        <td>
+          {{ story.dependencies }}
+        </td>
+        <td>
+          {{ story.successors }}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
