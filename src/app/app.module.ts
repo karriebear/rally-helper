@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material'
 import { RouterModule } from '@angular/router';
-import { Angular2Csv } from 'angular2-csv/Angular2-csv';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
 import { rootRouterConfig } from './app.routes';
@@ -22,6 +22,7 @@ import { ExportTable } from './shared/export-table.helper';
     RallySettings
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
     HttpModule,

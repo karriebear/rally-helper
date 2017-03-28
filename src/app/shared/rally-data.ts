@@ -6,7 +6,7 @@ export class RallyData {
 
   private storyApi = 'hierarchicalrequirement';
   private featureApi = 'portfolioitem/feature'
-  private querySettings = '?fetch=true&start=1&pagesize=2000';
+  private querySettings = '?fetch=true&start=1&pagesize=20';
   private feature = {};
   private sprintMapping = {
     'Sprint 4': 4,
@@ -70,7 +70,7 @@ export class RallyData {
   public getFeatures() {
     return this.api.get(this.featureApi + this.querySettings).map(data => {
       data.json().QueryResult.Results.forEach(feature => {
-        this.feature[feature.ObjectID] = {
+        this.feature[feature.ObjectUUID] = {
           'initiative': (feature.Parent ? feature.Parent.ObjectName : ''),
           'name': feature.Name
         };
@@ -88,13 +88,20 @@ export class RallyData {
         story.Iteration = this.getSprint(story.Iteration);
         story.beginSprint = story.Iteration;
         story.endSprint = story.Iteration;
-        story.Feature = story.Feature ? this.feature[story.Feature.ObjectID] : null;
+        console.log(this.feature[story.Feature._refObjectUUID]);
+        story.Feature = story.Feature ? this.feature[story.Feature._refObjectUUID].name : null;
         //story.initiative = story.Feature ? this.feature[story.Feature.ObjectID].initiative : null;
         if(story.Predecessors.Count > 0) {
           this.getPredecessors(story.ObjectID, index);
         }
+        else {
+          story.Predecessors = null;
+        }
         if(story.Successors.Count > 0) {
           this.getSucessors(story.ObjectID, index);
+        }
+        else {
+          story.Successors = null;
         }
         --this.searching;
       });

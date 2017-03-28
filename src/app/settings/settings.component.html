@@ -17,46 +17,14 @@
 
 
 <div class="section">
-  <button md-raised-button (click)="importData()">Update Credentials</button>
-  <table class="responsive-table bordered">
-    <thead>
-      <th>Feature</th>
-      <th>US ID</th>
-      <th>Name</th>
-      <th>Iteration</th>
-      <th>Release</th>
-      <th>Hours</th>
-      <th>Dependencies</th>
-      <th>Successors</th>
-    </thead>
-    <tbody>
-      <tr *ngFor="let story of rallyData.data">
-        <td>
-          {{ story.PortfolioItem ? story.PortfolioItem._refObjectName : '' }}
-        </td>
-        <td>
-          {{ story.FormattedID }}
-        </td>
-        <td>
-          {{ story.Name }}
-        </td>
-        <td>
-          {{ story.Iteration }}
-        </td>
-        <td>
-          {{ story.Release ? story.Release._refObjectName : '' }}
-        </td>
-        <td>
-          {{ story.TaskEstimateTotal }}
-        </td>
-        <td>
-          {{ story.beginSprint }}
-        </td>
-        <td>
-          {{ story.endSprint }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  {{ data | json }}
+  {{ rallyData.data | json }}
+  <button md-raised-button (click)="importData()">Import Data</button>
+  <div>
+    <ngx-datatable
+      [rows]="rallyData.data"
+      [columns]="columns"
+      [limit]="10"
+      [footerHeight]="50" >
+    </ngx-datatable>
+  </div>
 </div>

@@ -13,6 +13,16 @@ export class RallySettings implements OnInit {
   public password: string;
   public user: string;
   public data: any;
+  public columns = [
+    { name: 'Feature', prop: 'Feature'},
+    { name: 'US ID', prop: 'FormattedID'},
+    { name: 'Name', prop: 'Name'},
+    { name: 'Iteration', prop: 'Iteration'},
+    { name: 'Release', prop: 'Release._refObjectName'},
+    { name: 'Hours'},
+    { name: 'Sprint Start', prop: 'beginSprint'},
+    { name: 'Sprint End', prop: 'endSprint'}
+  ]
 
   constructor(public api: Api, public rallyData: RallyData) {
     console.log(sessionStorage);
@@ -35,7 +45,8 @@ export class RallySettings implements OnInit {
 
   public importData() {
     this.rallyData.getFeatures().subscribe(data => {
-      this.data = data
+      this.data = data;
+      console.log(this.data);
     });
   }
 }
