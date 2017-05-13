@@ -89,7 +89,7 @@ export class RallyQueryComponent implements OnInit {
     this.data.forEach((story, index) => {
       if(story.Predecessors.Count > 0) {
         ++this.searching;
-        this.api.get(this.data[index].ObjectID + '/Predecessors').subscribe(data => {
+        this.api.get('hierarchicalrequirement/' + this.data[index].ObjectID + '/Predecessors').subscribe(data => {
           this.data[index].dependencies = '';
 
           data.json().QueryResult.Results.forEach(story => {
@@ -105,7 +105,7 @@ export class RallyQueryComponent implements OnInit {
     this.data.forEach((story, index) => {
       if(story.Successors.Count > 0) {
         ++this.searching;
-        this.api.get(this.data[index].ObjectID + '/Successors').subscribe(data => {
+        this.api.get('hierarchicalrequirement/' + this.data[index].ObjectID + '/Successors').subscribe(data => {
           this.data[index].successors = '';
 
           data.json().QueryResult.Results.forEach(story => {

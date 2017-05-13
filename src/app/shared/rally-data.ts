@@ -1,12 +1,14 @@
 import { Api } from '../shared/api'
 import { Injectable } from '@angular/core';
+import 'rxjs/add/operator/mergeMap';
+import { Story } from '../story/story';
 
 @Injectable()
 export class RallyData {
 
   private storyApi = 'hierarchicalrequirement';
   private featureApi = 'portfolioitem/feature'
-  private querySettings = '?fetch=true&start=1&pagesize=20';
+  private querySettings = '?fetch=true&start=1&pagesize=100';
   private feature = {};
   private sprintMapping = {
     'Sprint 4': 4,
@@ -33,13 +35,15 @@ export class RallyData {
   }
   public data: any;
   public searching: number = 0;
+  public initiatives = [];
+  public test: Story[]
 
   constructor(public api: Api) {
   }
 
   public getPredecessors(storyUUID, index) {
     ++this.searching;
-    this.api.get(this.storyApi + '/' + storyUUID + '/Predecessors').subscribe(data => {
+    this.api.get(this.storyApi + '/' + storyUUID + '/Predecessors').map(data => {
       this.data[index].Predecessors = [];
 
       data.json().QueryResult.Results.forEach(story => {
@@ -56,7 +60,7 @@ export class RallyData {
 
   public getSucessors(storyUUID, index) {
     ++this.searching;
-    this.api.get(this.storyApi + '/' + storyUUID + '/Successors').subscribe(data => {
+    this.api.get(this.storyApi + '/' + storyUUID + '/Successors').map(data => {
       this.data[index].Successors = [];
 
       data.json().QueryResult.Results.forEach(story => {
@@ -68,29 +72,36 @@ export class RallyData {
   }
 
   public getFeatures() {
-    return this.api.get(this.featureApi + this.querySettings).map(data => {
+    //let temp = this.api.get(this.featureApi + this.querySettings).flatMap(data => {
+    let temp = this.api.get(this.featureApi + '?fetch=true&start=1&pagesize=1000').flatMap(data => {
+      let initiatives = {}
       data.json().QueryResult.Results.forEach(feature => {
+        let initiative = feature.Parent ? feature.Parent._refObjectName : '';
         this.feature[feature.ObjectUUID] = {
-          'initiative': (feature.Parent ? feature.Parent.ObjectName : ''),
+          'initiative': initiative,
           'name': feature.Name
         };
+        initiatives[initiative] = true;
       });
-      this.getAllUS();
+      this.initiatives = Object.keys(initiatives);
+      return this.getAllUS();
     });
+    console.log(temp);
+    return temp;
   }
 
   public getAllUS() {
-    console.log('getting US');
     this.searching = 1;
-    this.api.get(this.storyApi + '/' + this.querySettings).subscribe(data => {
+    return this.api.get(this.storyApi + '/' + this.querySettings).flatMap(data => {
       this.data = data.json().QueryResult.Results;
+      this.test =
       this.data.forEach((story, index) => {
         story.Iteration = this.getSprint(story.Iteration);
         story.beginSprint = story.Iteration;
         story.endSprint = story.Iteration;
-        console.log(this.feature[story.Feature._refObjectUUID]);
+        story.initiative = story.Feature ? this.feature[story.Feature._refObjectUUID].initiative : null;
         story.Feature = story.Feature ? this.feature[story.Feature._refObjectUUID].name : null;
-        //story.initiative = story.Feature ? this.feature[story.Feature.ObjectID].initiative : null;
+
         if(story.Predecessors.Count > 0) {
           this.getPredecessors(story.ObjectID, index);
         }
@@ -105,6 +116,8 @@ export class RallyData {
         }
         --this.searching;
       });
+      console.log(this.data);
+      return this.data;
     });
   }
 }

@@ -13,6 +13,7 @@ import { RallyQueryComponent } from './rally-query/rally-query.component';
 import { RallySettings } from './settings/settings.component';
 import { Api } from './shared/api';
 import { RallyData } from './shared/rally-data';
+import { User } from './shared/user';
 import { ExportTable } from './shared/export-table.helper';
 
 @NgModule({
@@ -30,7 +31,7 @@ import { ExportTable } from './shared/export-table.helper';
     NgxDatatableModule,
     RouterModule.forRoot(rootRouterConfig, { useHash: true })
   ],
-  providers: [Api, ExportTable, RallyData],
+  providers: [Api, ExportTable, RallyData, User],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

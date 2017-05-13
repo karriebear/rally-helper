@@ -1,10 +1,6 @@
 
 
 <div class="section">
-  <label>Current User</label>
-  <p>
-    {{ user }}
-  </p>
   <md-input-container class="example-full-width">
     <input mdInput placeholder="Email" [(ngModel)]="email">
   </md-input-container>
@@ -13,18 +9,59 @@
   </md-input-container>
   <button md-raised-button (click)="updateCreds()">Update Credentials</button>
   <button md-raised-button (click)="updateCreds()">Clear Credentials</button>
+  <button md-raised-button (click)="importData()">Import Data</button>
 </div>
 
 
 <div class="section">
-  {{ rallyData.data | json }}
-  <button md-raised-button (click)="importData()">Import Data</button>
-  <div>
-    <ngx-datatable
-      [rows]="rallyData.data"
-      [columns]="columns"
-      [limit]="10"
-      [footerHeight]="50" >
-    </ngx-datatable>
+  <p>
+ <label>{{ data | json }}</label>
+  </p>
+  <div class="filter-bar">
+    Filter By:
+    <div>
+      <md-select placeholder="Initiative" name="initiative">
+        <md-option *ngFor="let initiative of rallyData.initiatives; let i = index" [value]="i">
+          {{ initiative }}
+        </md-option>
+      </md-select>
+    </div>
   </div>
+  <ngx-datatable
+    class="material"
+    [rows]="rallyData.data"
+    [limit]="10"
+    [footerHeight]="50"
+    [rowHeight]="'auto'" >
+    <ngx-datatable-column name="Initiative">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{row.initiative}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Feature">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{row.Feature}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="US ID">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{row.FormattedID}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Name">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{row.Name}}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Release">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row.Release ? row.Release._refObjectName : '' }}
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Sprints">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row.Iteration > 0 && row.beginSprint != row.endSprint ? row.beginSprint + ' - ' + row.endSprint : row.Iteration }}
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
 </div>
